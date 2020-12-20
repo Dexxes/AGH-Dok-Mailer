@@ -142,6 +142,9 @@ if($nodes->length > 0)
         $message = str_replace("%URL%", $elem['url'], $message);
 
         SendMail($message);
+
+        if(!$lastQuery)
+            break;
     }
     file_put_contents(__DIR__ . "/lastQuery.txt", $elements[0]['title']);
 }
