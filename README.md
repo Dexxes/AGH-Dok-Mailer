@@ -6,7 +6,7 @@ Dabei kann wie in der Suche auf der Seite der [Parlamentsdokumentation](https://
 
 ## Konfiguration
 1. ```config.inc.php``` in ```config.php``` umbenennen
-2. Parameter eingeben, z. B. Mailzugangsdaten sowie Schlagwörter für die Parlamentsdokumentation
+2. In der Datei Parameter eingeben, z. B. Mailzugangsdaten sowie Schlagwörter für die Parlamentsdokumentation
 3. Cronjob einrichten
 z. B. ```php -f /PFAD/ZUR/DATEI/AGH.php```
 
