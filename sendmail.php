@@ -17,18 +17,21 @@ function SendMail($message)
         $mail = new PHPMailer(true);
 
         //Server settings
-        $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = SMTP_AUTH;
-        $mail->Username = SMTP_USER;
-        $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = SMTP_SECURE;
-        $mail->Port = SMTP_PORT;
+        if(!USE_LOCAL_MAILER)
+        {
+                $mail->isSMTP();
+                $mail->Host = SMTP_HOST;
+                $mail->SMTPAuth = SMTP_AUTH;
+                $mail->Username = SMTP_USER;
+                $mail->Password = SMTP_PASSWORD;
+                $mail->SMTPSecure = SMTP_SECURE;
+                $mail->Port = SMTP_PORT;
+        }
         $mail->Encoding = "8bit";
         $mail->CharSet = "UTF-8";
 
         //Recipients
-        $mail->setFrom(SMTP_SENDER_ADDRESS, SMTP_SENDER_NAME);
+        $mail->setFrom(MAIL_FROM_ADDRESS, MAIL_FROM);
         $mail->addAddress(SMTP_RECIPIENT);
 
         //Content
