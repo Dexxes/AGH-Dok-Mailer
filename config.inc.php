@@ -7,9 +7,9 @@
 
 //Mehrere Schlagworte werden durch ein Semikolon mit anschließendem Leerzeichen abgetrennt, also "XXX; YYY; ZZZ"
 define("SCHLAGWORTE", "");
+define("SMTP_RECIPIENT", "");                               // Recipient of the notification mails
 
 define("USE_LOCAL_MAILER", true);                           // the following SMTP-Settings will only be applied if this is set to false
-define("SMTP_RECIPIENT", "");                               // Recipient of the notification mails
 define("SMTP_HOST", "");                                    // Specify main and backup SMTP servers
 define("SMTP_PORT", 587);                                   // Port, 587 for TLS, 465 for SSL
 define("SMTP_AUTH", true);                                  // Whether to enable SMTP authentication or not
