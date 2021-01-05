@@ -3,7 +3,7 @@
 // Entwickler: Julian von Bülow
 // Lizenz: CC BY-SA 4.0 | https://creativecommons.org/licenses/by-sa/4.0/deed.de
 
-// Konfiguartionsvorlage
+// Konfigurationsvorlage
 
 //Mehrere Schlagworte werden durch ein Semikolon mit anschließendem Leerzeichen abgetrennt, also "XXX; YYY; ZZZ"
 define("SCHLAGWORTE", "");

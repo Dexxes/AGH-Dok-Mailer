@@ -106,47 +106,51 @@ $response = utf8_decode($response);
 $doc->loadHTML($response, LIBXML_NOWARNING);
 $xpath = new DOMXPath($doc);
 
-$nodes = $xpath->query("//div[@name='IfReportGenerated']//span[@name='OFR_WWK4']");
-if($nodes->length > 0)
+try
 {
-    $elements = array();
-    foreach ($nodes as $node)
+    $nodes = $xpath->query("//div[@name='IfReportGenerated']//span[@name='OFR_WWK4']");
+    if($nodes->length > 0)
     {
-        $element = array();
-        $element['title'] = trim($node->childNodes[0]->nodeValue);
-        $element['title'] = preg_replace('/\s+/', ' ', $element['title']);
-        $element['subtitle'] = $node->childNodes[2]->nodeValue;
-        $element['subtitle'] = preg_replace('/\s+/', ' ', $element['subtitle']);
-        $element['drucksache'] = trim($node->childNodes[3]->nodeValue);
-        $element['url'] = 'https://pardok.parlament-berlin.de' . $node->childNodes[3]->attributes->getNamedItem("href")->nodeValue;
-        array_push($elements, $element);
-    }    
-    
-    $lastQuery = false;
-    if(file_exists(__DIR__ . "/lastQuery.txt"))
-        $lastQuery = file_get_contents(__DIR__ . "/lastQuery.txt");
-    
-    $template = file_get_contents(__DIR__ . "/mail_template.html");
-
-    foreach ($elements as $elem) 
-    {
-        if($lastQuery == $elem['title'])
+        $elements = array();
+        foreach ($nodes as $node)
         {
-            file_put_contents(__DIR__ . "/lastQuery.txt", $elements[0]['title']);
-            return true;
+            $element = array();
+            $element['title'] = trim($node->childNodes[0]->nodeValue);
+            $element['title'] = preg_replace('/\s+/', ' ', $element['title']);
+            $element['subtitle'] = $node->childNodes[2]->nodeValue;
+            $element['subtitle'] = preg_replace('/\s+/', ' ', $element['subtitle']);
+            $element['drucksache'] = trim($node->childNodes[3]->nodeValue);
+            $element['url'] = 'https://pardok.parlament-berlin.de' . $node->childNodes[3]->attributes->getNamedItem("href")->nodeValue;
+            array_push($elements, $element);
+        }    
+        
+        $lastQuery = false;
+        if(file_exists(__DIR__ . "/lastQuery.txt"))
+            $lastQuery = file_get_contents(__DIR__ . "/lastQuery.txt");
+        
+        $template = file_get_contents(__DIR__ . "/mail_template.html");
+
+        foreach ($elements as $elem) 
+        {
+            if($lastQuery == $elem['title'])
+            {
+                file_put_contents(__DIR__ . "/lastQuery.txt", $elements[0]['title']);
+                return true;
+            }
+
+            $message = str_replace("%TITLE%", $elem['title'], $template);
+            $message = str_replace("%SUBTITLE%", $elem['subtitle'], $message);
+            $message = str_replace("%DRUCKSACHE%", $elem['drucksache'], $message);
+            $message = str_replace("%URL%", $elem['url'], $message);
+
+            SendMail($message);
+
+            if(!$lastQuery)
+                break;
         }
-
-        $message = str_replace("%TITLE%", $elem['title'], $template);
-        $message = str_replace("%SUBTITLE%", $elem['subtitle'], $message);
-        $message = str_replace("%DRUCKSACHE%", $elem['drucksache'], $message);
-        $message = str_replace("%URL%", $elem['url'], $message);
-
-        SendMail($message);
-
-        if(!$lastQuery)
-            break;
+        file_put_contents(__DIR__ . "/lastQuery.txt", $elements[0]['title']);
     }
-    file_put_contents(__DIR__ . "/lastQuery.txt", $elements[0]['title']);
 }
+catch(Exception $e) { echo $e; }
 
 ?>
